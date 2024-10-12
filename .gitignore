@@ -52,7 +52,7 @@ coverage.xml
 
 # Django stuff:
 staticfiles/
-db.sqlite
+db.sqlite3
 
 # Sphinx documentation
 docs/_build/
