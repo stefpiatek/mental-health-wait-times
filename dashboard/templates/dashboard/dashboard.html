@@ -29,29 +29,47 @@
   <div class="row">
     <div class="col-md-3">
       <h2>Actual values</h2>
+    </div>
+    <div class="col-md-3">
+      <h2>Modelling values</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
       <div class="slider-container">
         <label for="urgentRatio">Urgent vs. Non-Urgent Ratio</label>
         <span class="d-block">50%</span>
       </div>
+    </div>
+    <div class="col-md-6">
+      <div class="slider-container">
+        <input type="range" class="form-control-range" id="urgentRatio" name="urgentRatio" min="0" max="100" value="50" oninput="updateFields()">
+        <span id="urgentRatioSliderValue">50%</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
       <div class="slider-container">
         <label for="staffCount">Number of Staff</label>
         <span class="d-block">10</span>
       </div>
+    </div>
+    <div class="col-md-6">
+      <div class="slider-container">
+        <input type="range" class="form-control-range" id="staffCount" name="staffCount" min="1" max="100" value="10" oninput="updateFields()">
+        <span id="staffCountSliderValue">10</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
       <div class="slider-container">
         <label for="assessmentsPerMonth">New Assessments per Month per Clinician</label>
         <span class="d-block">20</span>
       </div>
     </div>
-    <div class="col-md-9">
-      <h2>Modelling values</h2>
-      <div class="slider-container">
-        <input type="range" class="form-control-range" id="urgentRatio" name="urgentRatio" min="0" max="100" value="50" oninput="updateFields()">
-        <span id="urgentRatioSliderValue">50%</span>
-      </div>
-      <div class="slider-container">
-        <input type="range" class="form-control-range" id="staffCount" name="staffCount" min="1" max="100" value="10" oninput="updateFields()">
-        <span id="staffCountSliderValue">10</span>
-      </div>
+    <div class="col-md-6">
       <div class="slider-container">
         <input type="range" class="form-control-range" id="assessmentsPerMonth" name="assessmentsPerMonth" min="0" max="50" value="20"
                oninput="updateFields()">
