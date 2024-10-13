@@ -1,13 +1,11 @@
 from django.shortcuts import render
 
-from django.shortcuts import render
-
 
 def dashboard_view(request):
     # Example hardcoded data for actual wait times
     actual_wait_times = {
-        'urgent': [30, 45, 50, 60, 40],
-        'non_urgent': [60, 70, 80, 90, 75]
+        'urgent': [120, 450, 222, 160, 140],
+        'non_urgent': [300, 600, 400, 200, 250]
     }
 
 

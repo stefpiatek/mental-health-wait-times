@@ -78,8 +78,17 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-4">
-      <canvas id="taskChart"></canvas>
+    <div class="col-md-2">
+      <canvas id="actualUrgentChart"></canvas>
+    </div>
+    <div class="col-md-2">
+      <canvas id="actualNonUrgentChart"></canvas>
+    </div>
+    <div class="col-md-2">
+      <canvas id="modelledUrgentChart"></canvas>
+    </div>
+    <div class="col-md-2">
+      <canvas id="modelledNonUrgentChart"></canvas>
     </div>
   </div>
 </div>
@@ -98,35 +107,70 @@
     const assessmentsPerMonth = document.getElementById('assessmentsPerMonth').value;
 
     const modelUrgent = (value, urgentRatio, staffCount, assessmentsPerMonth) => {
-        return value * (urgentRatio / 25) * (staffCount / 10) * (20 / assessmentsPerMonth)
+        return value * (urgentRatio / 25) * (10 / staffCount) * (20 / assessmentsPerMonth)
     }
     const modelNonUrgent = (value, urgentRatio, staffCount, assessmentsPerMonth) => {
-        return value * ((100 - urgentRatio) / 25) * (staffCount / 10) * (20 / assessmentsPerMonth)
+        return value * ((100 - urgentRatio) / 25) * (10 / staffCount) * (20 / assessmentsPerMonth)
     }
     const actualUrgent = modelUrgent(avgActualUrgent, urgentRatio, staffCount, assessmentsPerMonth);
     const actualNonUrgent = modelNonUrgent(avgActualNonUrgent, urgentRatio, staffCount, assessmentsPerMonth);
 
-    const ctx = document.getElementById('taskChart').getContext('2d');
+    const generateDatasets = (waitInDays, name, colour) => {
+        const totalWeeks = 52
+        const daysInWeek = 7
+        let remainingWeeks = waitInDays / daysInWeek
+        const greyColour = '#c1bcbc'
 
-    const taskChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Actual Urgent', 'Modeled Urgent', 'Actual Non-Urgent', 'Modeled Non-Urgent'],
-            datasets: [{
-                label: 'Wait Time',
-                data: [actualUrgent, actualUrgent, actualNonUrgent, actualNonUrgent],
-                backgroundColor: ['#ff6384', '#36a2eb', '#ff9f40', '#4bc0c0'],
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
+        const datasets = []
+
+        for (let year = 0; year < 5; year++) {
+            if (remainingWeeks <= 0) {
+                break
             }
+
+            if (remainingWeeks <= totalWeeks) {
+                datasets.unshift(
+                    {
+                        label: name,
+                        data: [remainingWeeks, totalWeeks - remainingWeeks],
+                        backgroundColor: [colour, greyColour],
+                    }
+                )
+            } else {
+                datasets.unshift(
+                    {
+                        label: name,
+                        data: [totalWeeks],
+                        backgroundColor: [colour],
+                    }
+                )
+            }
+            remainingWeeks = remainingWeeks - totalWeeks
+            console.log(datasets)
         }
-    });
+
+        return datasets
+    }
+
+    const createChart = (elementId, waitInDays, name, colour) => {
+        const ctx = document.getElementById(elementId).getContext('2d');
+
+        return new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [name],
+                datasets: generateDatasets(waitInDays, name, colour),
+            },
+            options: {
+                responsive: true
+            }
+        });
+    }
+
+    const actualUrgentChart = createChart("actualUrgentChart", actualUrgent, "Actual Urgent", '#ff6384')
+    const actualNonUrgentChart = createChart("actualNonUrgentChart", actualNonUrgent, "Actual Non-Urgent", '#36a2eb')
+    const modelledUrgentChart = createChart("modelledUrgentChart", actualUrgent, "Modelled Urgent", '#ff6384')
+    const modelledNonUrgentChart = createChart("modelledNonUrgentChart", actualNonUrgent, "Modelled Non-Urgent", '#36a2eb')
 
     const updateChart = () => {
         const urgentRatio = document.getElementById('urgentRatio').value;
@@ -142,11 +186,12 @@
         const modelledNonUrgent = modelNonUrgent(avgActualNonUrgent, urgentRatio, staffCount, assessmentsPerMonth);
 
         // Update the chart data
-        taskChart.data.datasets[0].data[1] = modelledUrgent
-        taskChart.data.datasets[0].data[3] = modelledNonUrgent
+        modelledUrgentChart.data.datasets = generateDatasets(modelledUrgent, "Modelled Urgent", '#ff6384')
+        modelledNonUrgentChart.data.datasets = generateDatasets(modelledNonUrgent, "Modelled Non-Urgent", '#36a2eb')
 
         // Update the chart data if needed
-        taskChart.update();
+        modelledUrgentChart.update();
+        modelledNonUrgentChart.update();
     };
 </script>
 </body>
