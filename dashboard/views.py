@@ -1,13 +1,31 @@
 from django.shortcuts import render
 from .models import Pathway
+from django.db.models import Q
+from datetime import datetime
 
 
 def dashboard_view(request):
 
-    # Example hardcoded data for actual wait times
+    # Data from Model
+    pathway_data = Pathway.objects.all()
+
+    urgent_referral_dates = pathway_data.filter(
+        Q(first_contact_date=None) & Q(urgent=True)
+    ).values_list("referral_date", flat=True)
+    urgent_wait_days = []
+    for date in urgent_referral_dates:
+        urgent_wait_days.append((datetime.today().date() - date).days)
+
+    routine_referral_dates = pathway_data.filter(
+        Q(first_contact_date=None) & Q(urgent=False)
+    ).values_list("referral_date", flat=True)
+    routine_wait_days = []
+    for date in routine_referral_dates:
+        routine_wait_days.append((datetime.today().date() - date).days)
+
     actual_wait_times = {
-        "urgent": [120, 450, 222, 160, 140],
-        "routine": [300, 600, 400, 200, 250],
+        "urgent": urgent_wait_days,
+        "routine": routine_wait_days,
     }
 
     # Calculate average wait times
@@ -29,23 +47,31 @@ def summary_view(request):
 
     pathway_data = Pathway.objects.all()
 
-    mh_waiting = (
-        pathway_data.filter(pathway_type__pathway_type="Mental Health")
-        .filter(first_contact_date__isnull=True)
-        .count()
-    )
-    nd_waiting = pathway_data.filter(
-        pathway_type__pathway_type="Neurodiversity"
-    ).count()
+    urgent_referral_dates = pathway_data.filter(
+        Q(first_contact_date=None) & Q(urgent=True)
+    ).values_list("referral_date", flat=True)
+    urgent_wait_days = []
+    for date in urgent_referral_dates:
+        urgent_wait_days.append((datetime.today().date() - date).days)
 
-    context = {"mh_waiting": mh_waiting, "nd_waiting": nd_waiting}
+    routine_referral_dates = pathway_data.filter(
+        Q(first_contact_date=None) & Q(urgent=False)
+    ).values_list("referral_date", flat=True)
+    routine_wait_days = []
+    for date in routine_referral_dates:
+        routine_wait_days.append((datetime.today().date() - date).days)
+
+    context = {
+        "urgent": urgent_wait_days,
+        "routine": routine_wait_days,
+    }
 
     return render(request, "dashboard/summary.html", context)
 
 
 def all_patients_view(request):
 
-    pathway_data = Pathway.objects.all()
+    pathway_data = Pathway.objects.all().order_by("-referral_date")
 
     context = {"pathway_data": pathway_data}
 
