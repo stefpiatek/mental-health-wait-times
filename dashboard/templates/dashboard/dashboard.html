@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manager Dashboard</title>
+  <title>Wait well</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -14,8 +14,8 @@
 </head>
 <body>
 <div class="container">
-  <h1 class="my-4">Wait Dashboard</h1>
-  <div class="col-md-3">
+  <h1 class="my-4">Wait Well</h1>
+  <div class="col-md-2">
     <div class="row">
       <h2>Pathway</h2>
       <div>
@@ -27,54 +27,59 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-4">
       <h2>Actual values</h2>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
       <h2>Modelling values</h2>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-4">
       <div class="slider-container">
-        <label for="urgentRatio">Urgent vs. Non-Urgent Ratio</label>
-        <span class="d-block">50%</span>
+        <label for="urgentRatio">Percent Non Urgent Seen</label>
+        <span class="d-block">25%</span>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
       <div class="slider-container">
-        <input type="range" class="form-control-range" id="urgentRatio" name="urgentRatio" min="0" max="100" value="50" oninput="updateFields()">
-        <span id="urgentRatioSliderValue">50%</span>
+        <input type="range" class="form-control-range" id="urgentRatio" name="urgentRatio" min="1" max="99" value="25" oninput="updateChart()">
+        <span id="urgentRatioSliderValue">25%</span>
       </div>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-4">
       <div class="slider-container">
-        <label for="staffCount">Number of Staff</label>
+        <label for="staffCount">WTE Equivalent</label>
         <span class="d-block">10</span>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
       <div class="slider-container">
-        <input type="range" class="form-control-range" id="staffCount" name="staffCount" min="1" max="100" value="10" oninput="updateFields()">
+        <input type="range" class="form-control-range" id="staffCount" name="staffCount" min="1" max="20" value="10" oninput="updateChart()">
         <span id="staffCountSliderValue">10</span>
       </div>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-4">
       <div class="slider-container">
         <label for="assessmentsPerMonth">New Assessments per Month per Clinician</label>
         <span class="d-block">20</span>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
       <div class="slider-container">
-        <input type="range" class="form-control-range" id="assessmentsPerMonth" name="assessmentsPerMonth" min="0" max="50" value="20"
-               oninput="updateFields()">
+        <input type="range" class="form-control-range" id="assessmentsPerMonth" name="assessmentsPerMonth" min="1" max="30" value="20"
+               oninput="updateChart()">
         <span id="assessmentsPerMonthSliderValue">20</span>
       </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <canvas id="taskChart"></canvas>
     </div>
   </div>
 </div>
@@ -84,7 +89,46 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.min.js"></script>
 <script>
-    function updateFields() {
+
+    const avgActualUrgent = {{ avg_actual_urgent }};
+    const avgActualNonUrgent = {{ avg_actual_non_urgent }};
+
+    const urgentRatio = document.getElementById('urgentRatio').value;
+    const staffCount = document.getElementById('staffCount').value;
+    const assessmentsPerMonth = document.getElementById('assessmentsPerMonth').value;
+
+    const modelUrgent = (value, urgentRatio, staffCount, assessmentsPerMonth) => {
+        return value * (urgentRatio / 25) * (staffCount / 10) * (20 / assessmentsPerMonth)
+    }
+    const modelNonUrgent = (value, urgentRatio, staffCount, assessmentsPerMonth) => {
+        return value * ((100 - urgentRatio) / 25) * (staffCount / 10) * (20 / assessmentsPerMonth)
+    }
+    const actualUrgent = modelUrgent(avgActualUrgent, urgentRatio, staffCount, assessmentsPerMonth);
+    const actualNonUrgent = modelNonUrgent(avgActualNonUrgent, urgentRatio, staffCount, assessmentsPerMonth);
+
+    const ctx = document.getElementById('taskChart').getContext('2d');
+
+    const taskChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Actual Urgent', 'Modeled Urgent', 'Actual Non-Urgent', 'Modeled Non-Urgent'],
+            datasets: [{
+                label: 'Wait Time',
+                data: [actualUrgent, actualUrgent, actualNonUrgent, actualNonUrgent],
+                backgroundColor: ['#ff6384', '#36a2eb', '#ff9f40', '#4bc0c0'],
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    const updateChart = () => {
         const urgentRatio = document.getElementById('urgentRatio').value;
         const staffCount = document.getElementById('staffCount').value;
         const assessmentsPerMonth = document.getElementById('assessmentsPerMonth').value;
@@ -92,7 +136,18 @@
         document.getElementById('urgentRatioSliderValue').textContent = urgentRatio + '%';
         document.getElementById('staffCountSliderValue').textContent = staffCount;
         document.getElementById('assessmentsPerMonthSliderValue').textContent = assessmentsPerMonth;
-    }
+
+        // Recalculate the modelled values
+        const modelledUrgent = modelUrgent(avgActualUrgent, urgentRatio, staffCount, assessmentsPerMonth);
+        const modelledNonUrgent = modelNonUrgent(avgActualNonUrgent, urgentRatio, staffCount, assessmentsPerMonth);
+
+        // Update the chart data
+        taskChart.data.datasets[0].data[1] = modelledUrgent
+        taskChart.data.datasets[0].data[3] = modelledNonUrgent
+
+        // Update the chart data if needed
+        taskChart.update();
+    };
 </script>
 </body>
 </html>
