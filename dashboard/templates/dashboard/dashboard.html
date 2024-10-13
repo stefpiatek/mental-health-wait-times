@@ -37,7 +37,7 @@
   <div class="row">
     <div class="col-md-4">
       <div class="slider-container">
-        <label for="urgentRatio">Percent Non Urgent Seen</label>
+        <label for="urgentRatio">Percent Routine Seen</label>
         <span class="d-block">25%</span>
       </div>
     </div>
@@ -82,13 +82,13 @@
       <canvas id="actualUrgentChart"></canvas>
     </div>
     <div class="col-md-2">
-      <canvas id="actualNonUrgentChart"></canvas>
+      <canvas id="actualRoutineChart"></canvas>
     </div>
     <div class="col-md-2">
       <canvas id="modelledUrgentChart"></canvas>
     </div>
     <div class="col-md-2">
-      <canvas id="modelledNonUrgentChart"></canvas>
+      <canvas id="modelledRoutineChart"></canvas>
     </div>
   </div>
 </div>
@@ -100,7 +100,7 @@
 <script>
 
     const avgActualUrgent = {{ avg_actual_urgent }};
-    const avgActualNonUrgent = {{ avg_actual_non_urgent }};
+    const avgActualRoutine = {{ avg_actual_routine }};
 
     const urgentRatio = document.getElementById('urgentRatio').value;
     const staffCount = document.getElementById('staffCount').value;
@@ -109,11 +109,11 @@
     const modelUrgent = (value, urgentRatio, staffCount, assessmentsPerMonth) => {
         return value * (urgentRatio / 25) * (10 / staffCount) * (20 / assessmentsPerMonth)
     }
-    const modelNonUrgent = (value, urgentRatio, staffCount, assessmentsPerMonth) => {
+    const modelRoutine = (value, urgentRatio, staffCount, assessmentsPerMonth) => {
         return value * ((100 - urgentRatio) / 25) * (10 / staffCount) * (20 / assessmentsPerMonth)
     }
     const actualUrgent = modelUrgent(avgActualUrgent, urgentRatio, staffCount, assessmentsPerMonth);
-    const actualNonUrgent = modelNonUrgent(avgActualNonUrgent, urgentRatio, staffCount, assessmentsPerMonth);
+    const actualRoutine = modelRoutine(avgActualRoutine, urgentRatio, staffCount, assessmentsPerMonth);
 
     const generateDatasets = (waitInDays, name, colour) => {
         const totalWeeks = 52
@@ -168,9 +168,9 @@
     }
 
     const actualUrgentChart = createChart("actualUrgentChart", actualUrgent, "Actual Urgent", '#ff6384')
-    const actualNonUrgentChart = createChart("actualNonUrgentChart", actualNonUrgent, "Actual Non-Urgent", '#36a2eb')
+    const actualRoutineChart = createChart("actualRoutineChart", actualRoutine, "Actual Routine", '#36a2eb')
     const modelledUrgentChart = createChart("modelledUrgentChart", actualUrgent, "Modelled Urgent", '#ff6384')
-    const modelledNonUrgentChart = createChart("modelledNonUrgentChart", actualNonUrgent, "Modelled Non-Urgent", '#36a2eb')
+    const modelledRoutineChart = createChart("modelledRoutineChart", actualRoutine, "Modelled Routine", '#36a2eb')
 
     const updateChart = () => {
         const urgentRatio = document.getElementById('urgentRatio').value;
@@ -183,15 +183,15 @@
 
         // Recalculate the modelled values
         const modelledUrgent = modelUrgent(avgActualUrgent, urgentRatio, staffCount, assessmentsPerMonth);
-        const modelledNonUrgent = modelNonUrgent(avgActualNonUrgent, urgentRatio, staffCount, assessmentsPerMonth);
+        const modelledRoutine = modelRoutine(avgActualRoutine, urgentRatio, staffCount, assessmentsPerMonth);
 
         // Update the chart data
         modelledUrgentChart.data.datasets = generateDatasets(modelledUrgent, "Modelled Urgent", '#ff6384')
-        modelledNonUrgentChart.data.datasets = generateDatasets(modelledNonUrgent, "Modelled Non-Urgent", '#36a2eb')
+        modelledRoutineChart.data.datasets = generateDatasets(modelledRoutine, "Modelled Routine", '#36a2eb')
 
         // Update the chart data if needed
         modelledUrgentChart.update();
-        modelledNonUrgentChart.update();
+        modelledRoutineChart.update();
     };
 </script>
 </body>
