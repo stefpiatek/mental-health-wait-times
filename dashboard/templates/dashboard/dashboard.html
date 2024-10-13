@@ -100,6 +100,20 @@
       <canvas id="modelledRoutineChart"></canvas>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-2">
+      <p id="actualUrgentText"></p>
+    </div>
+    <div class="col-md-2">
+      <p id="actualRoutineText"></p>
+    </div>
+    <div class="col-md-2">
+      <p id="modelledUrgentText"></p>
+    </div>
+    <div class="col-md-2">
+      <p id="modelledRoutineText"></p>
+    </div>
+  </div>
 </div>
 <!-- Bootstrap JS and dependencies -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -155,7 +169,6 @@
                 )
             }
             remainingWeeks = remainingWeeks - totalWeeks
-            console.log(datasets)
         }
 
         return datasets
@@ -181,6 +194,26 @@
     const modelledUrgentChart = createChart("modelledUrgentChart", actualUrgent, "Modelled Urgent", '#ff6384')
     const modelledRoutineChart = createChart("modelledRoutineChart", actualRoutine, "Modelled Routine", '#36a2eb')
 
+    const daysToWait = (days) => {
+        const daysInYear = 365;
+        const daysInWeek = 7;
+
+        if (days < daysInYear) {
+            const weeks = Math.floor(days / daysInWeek);
+            return `${weeks} week${weeks !== 1 ? 's' : ''}`;
+        } else {
+            const years = Math.floor(days / daysInYear);
+            const remainingDays = days % daysInYear;
+            const weeks = Math.floor(remainingDays / daysInWeek);
+            return `${years} year${years !== 1 ? 's' : ''} and ${weeks} week${weeks !== 1 ? 's' : ''}`;
+        }
+    }
+
+    document.getElementById('actualUrgentText').textContent = daysToWait(actualUrgent)
+    document.getElementById('actualRoutineText').textContent = daysToWait(actualRoutine)
+    document.getElementById('modelledUrgentText').textContent = daysToWait(actualUrgent)
+    document.getElementById('modelledRoutineText').textContent = daysToWait(actualRoutine)
+
     const updateChart = () => {
         const urgentRatio = document.getElementById('urgentRatio').value;
         const staffCount = document.getElementById('staffCount').value;
@@ -197,10 +230,13 @@
         // Update the chart data
         modelledUrgentChart.data.datasets = generateDatasets(modelledUrgent, "Modelled Urgent", '#ff6384')
         modelledRoutineChart.data.datasets = generateDatasets(modelledRoutine, "Modelled Routine", '#36a2eb')
+        modelledUrgentChart.update()
+        modelledRoutineChart.update()
 
-        // Update the chart data if needed
-        modelledUrgentChart.update();
-        modelledRoutineChart.update();
+        // Update labels
+        document.getElementById('modelledUrgentText').textContent = daysToWait(modelledUrgent)
+        document.getElementById('modelledRoutineText').textContent = daysToWait(modelledRoutine)
+
     };
 </script>
 </body>
