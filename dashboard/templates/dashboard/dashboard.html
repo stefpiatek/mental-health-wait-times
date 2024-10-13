@@ -119,7 +119,7 @@
         const totalWeeks = 52
         const daysInWeek = 7
         let remainingWeeks = waitInDays / daysInWeek
-        const greyColour = '#c1bcbc'
+        const remainingYearColour = '#ffffff'
 
         const datasets = []
 
@@ -133,7 +133,7 @@
                     {
                         label: name,
                         data: [remainingWeeks, totalWeeks - remainingWeeks],
-                        backgroundColor: [colour, greyColour],
+                        backgroundColor: [colour, remainingYearColour],
                     }
                 )
             } else {
