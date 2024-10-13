@@ -46,8 +46,8 @@
     </div>
     <div class="col-md-4">
       <div class="slider-container">
-        <input type="range" class="form-control-range" id="urgentRatio" name="urgentRatio" min="1" max="99"
-               value="25" oninput="updateChart()">
+        <input type="range" class="form-control-range" id="urgentRatio" name="urgentRatio" min="1" max="99" value="25"
+               oninput="updateChart()">
         <span id="urgentRatioSliderValue">25%</span>
       </div>
     </div>
@@ -61,8 +61,8 @@
     </div>
     <div class="col-md-4">
       <div class="slider-container">
-        <input type="range" class="form-control-range" id="staffCount" name="staffCount" min="1" max="20"
-               value="10" oninput="updateChart()">
+        <input type="range" class="form-control-range" id="staffCount" name="staffCount" min="1" max="20" value="10"
+               oninput="updateChart()">
         <span id="staffCountSliderValue">10</span>
       </div>
     </div>
@@ -76,13 +76,12 @@
     </div>
     <div class="col-md-4">
       <div class="slider-container">
-        <input type="range" class="form-control-range" id="assessmentsPerMonth" name="assessmentsPerMonth"
-               min="1" max="30" value="9" oninput="updateChart()">
+        <input type="range" class="form-control-range" id="assessmentsPerMonth" name="assessmentsPerMonth" min="1" max="30" value="9"
+               oninput="updateChart()">
         <span id="assessmentsPerMonthSliderValue">9</span>
       </div>
     </div>
   </div>
-  <br>
   <div class="row">
     <div class="col-md-4">
       <h2>Actual wait years</h2>
@@ -105,119 +104,23 @@
       <canvas id="modelledRoutineChart"></canvas>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-2">
+      <p id="actualUrgentText"></p>
+    </div>
+    <div class="col-md-2">
+      <p id="actualRoutineText"></p>
+    </div>
+    <div class="col-md-2">
+      <p id="modelledUrgentText"></p>
+    </div>
+    <div class="col-md-2">
+      <p id="modelledRoutineText"></p>
+    </div>
+  </div>
 </div>
 <!-- Bootstrap JS and dependencies -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.min.js"></script>
-<script>
-    <div class="container">
-        <h1 class="my-4">Wait Well</h1>
-        <div class="col-md-2">
-            <div class="row">
-                <h2>Pathway</h2>
-                <div>
-                    <select class="form-control" id="pathwaySelect" name="pathwaySelect">
-                        <option value="mental_health">Mental Health</option>
-                        <option value="neuro_developmental">Neuro Developmental</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <h2>Actual values</h2>
-            </div>
-            <div class="col-md-4">
-                <h2>Modelling values</h2>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="slider-container">
-                    <label for="urgentRatio">Percent Routine Seen</label>
-                    <span class="d-block">25%</span>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="slider-container">
-                    <input type="range" class="form-control-range" id="urgentRatio" name="urgentRatio" min="1" max="99" value="25"
-                           oninput="updateChart()">
-                        <span id="urgentRatioSliderValue">25%</span>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="slider-container">
-                    <label for="staffCount">WTE Equivalent</label>
-                    <span class="d-block">10</span>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="slider-container">
-                    <input type="range" class="form-control-range" id="staffCount" name="staffCount" min="1" max="20" value="10"
-                           oninput="updateChart()">
-                        <span id="staffCountSliderValue">10</span>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="slider-container">
-                    <label for="assessmentsPerMonth">New Assessments per Month per Clinician</label>
-                    <span class="d-block">9</span>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="slider-container">
-                    <input type="range" class="form-control-range" id="assessmentsPerMonth" name="assessmentsPerMonth" min="1" max="30" value="9"
-                           oninput="updateChart()">
-                        <span id="assessmentsPerMonthSliderValue">9</span>
-                </div>
-            </div>
-        </div>
-        <br>
-            <div class="row">
-                <div class="col-md-4">
-                    <h2>Actual wait years</h2>
-                </div>
-                <div class="col-md-4">
-                    <h2>Modelled wait years</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2">
-                    <canvas id="actualUrgentChart"></canvas>
-                </div>
-                <div class="col-md-2">
-                    <canvas id="actualRoutineChart"></canvas>
-                </div>
-                <div class="col-md-2">
-                    <canvas id="modelledUrgentChart"></canvas>
-                </div>
-                <div class="col-md-2">
-                    <canvas id="modelledRoutineChart"></canvas>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2">
-                    <p id="actualUrgentText"></p>
-                </div>
-                <div class="col-md-2">
-                    <p id="actualRoutineText"></p>
-                </div>
-                <div class="col-md-2">
-                    <p id="modelledUrgentText"></p>
-                </div>
-                <div class="col-md-2">
-                    <p id="modelledRoutineText"></p>
-                </div>
-            </div>
-    </div>
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.min.js"></script>
@@ -295,54 +198,50 @@
     const modelledUrgentChart = createChart("modelledUrgentChart", actualUrgent, "Modelled Urgent", '#ff6384')
     const modelledRoutineChart = createChart("modelledRoutineChart", actualRoutine, "Modelled Routine", '#36a2eb')
 
+
+    const daysToWait = (days) => {
+        const daysInYear = 365;
+        const daysInWeek = 7;
+
+        if (days < daysInYear) {
+            const weeks = Math.floor(days / daysInWeek);
+            return `${weeks} week${weeks !== 1 ? 's' : ''}`;
+        } else {
+            const years = Math.floor(days / daysInYear);
+            const remainingDays = days % daysInYear;
+            const weeks = Math.floor(remainingDays / daysInWeek);
+            return `${years} year${years !== 1 ? 's' : ''} and ${weeks} week${weeks !== 1 ? 's' : ''}`;
+        }
+    }
+
+    document.getElementById('actualUrgentText').textContent = daysToWait(actualUrgent)
+    document.getElementById('actualRoutineText').textContent = daysToWait(actualRoutine)
+    document.getElementById('modelledUrgentText').textContent = daysToWait(actualUrgent)
+    document.getElementById('modelledRoutineText').textContent = daysToWait(actualRoutine)
+
     const updateChart = () => {
         const urgentRatio = document.getElementById('urgentRatio').value;
         const staffCount = document.getElementById('staffCount').value;
         const assessmentsPerMonth = document.getElementById('assessmentsPerMonth').value;
-        const daysToWait = (days) => {
-            const daysInYear = 365;
-            const daysInWeek = 7;
 
-            if (days < daysInYear) {
-                const weeks = Math.floor(days / daysInWeek);
-                return `${weeks} week${weeks !== 1 ? 's' : ''}`;
-            } else {
-                const years = Math.floor(days / daysInYear);
-                const remainingDays = days % daysInYear;
-                const weeks = Math.floor(remainingDays / daysInWeek);
-                return `${years} year${years !== 1 ? 's' : ''} and ${weeks} week${weeks !== 1 ? 's' : ''}`;
-            }
-        }
+        document.getElementById('urgentRatioSliderValue').textContent = urgentRatio + '%';
+        document.getElementById('staffCountSliderValue').textContent = staffCount;
+        document.getElementById('assessmentsPerMonthSliderValue').textContent = assessmentsPerMonth;
 
-        document.getElementById('actualUrgentText').textContent = daysToWait(actualUrgent)
-        document.getElementById('actualRoutineText').textContent = daysToWait(actualRoutine)
-        document.getElementById('modelledUrgentText').textContent = daysToWait(actualUrgent)
-        document.getElementById('modelledRoutineText').textContent = daysToWait(actualRoutine)
+        // Recalculate the modelled values
+        const modelledUrgent = modelUrgent(avgActualUrgent, urgentRatio, staffCount, assessmentsPerMonth);
+        const modelledRoutine = modelRoutine(avgActualRoutine, urgentRatio, staffCount, assessmentsPerMonth);
 
-        const updateChart = () => {
-            const urgentRatio = document.getElementById('urgentRatio').value;
-            const staffCount = document.getElementById('staffCount').value;
-            const assessmentsPerMonth = document.getElementById('assessmentsPerMonth').value;
+        // Update the chart data
+        modelledUrgentChart.data.datasets = generateDatasets(modelledUrgent, "Modelled Urgent", '#ff6384')
+        modelledUrgentChart.update()
+        modelledRoutineChart.data.datasets = generateDatasets(modelledRoutine, "Modelled Routine", '#36a2eb')
+        modelledRoutineChart.update()
 
-            document.getElementById('urgentRatioSliderValue').textContent = urgentRatio + '%';
-            document.getElementById('staffCountSliderValue').textContent = staffCount;
-            document.getElementById('assessmentsPerMonthSliderValue').textContent = assessmentsPerMonth;
-
-            // Recalculate the modelled values
-            const modelledUrgent = modelUrgent(avgActualUrgent, urgentRatio, staffCount, assessmentsPerMonth);
-            const modelledRoutine = modelRoutine(avgActualRoutine, urgentRatio, staffCount, assessmentsPerMonth);
-
-            // Update the chart data
-            modelledUrgentChart.data.datasets = generateDatasets(modelledUrgent, "Modelled Urgent", '#ff6384')
-            modelledUrgentChart.update()
-            modelledRoutineChart.data.datasets = generateDatasets(modelledRoutine, "Modelled Routine", '#36a2eb')
-            modelledRoutineChart.update()
-
-            // Update labels
-            document.getElementById('modelledUrgentText').textContent = daysToWait(modelledUrgent)
-            document.getElementById('modelledRoutineText').textContent = daysToWait(modelledRoutine)
-
-        };
+        // Update labels
+        document.getElementById('modelledUrgentText').textContent = daysToWait(modelledUrgent)
+        document.getElementById('modelledRoutineText').textContent = daysToWait(modelledRoutine)
+    }
 </script>
 </body>
 
